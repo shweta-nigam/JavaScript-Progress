@@ -1,0 +1,7 @@
+Some functions in prisma 
+
+1. uuid() -> 	Generates a random UUID string                              -->	For unique IDs
+2. cuid() ->    Generates a collision-resistant ID (shorter than UUID)      -->	Same use, smaller size
+3. now()  ->    Gets the current date/time                                  -->	Timestamps like createdAt
+4. autoincrement() ->	Auto-counting number (1, 2, 3, …)	                --> Numeric primary keys
+5. @updatedAt	   ->  Special directive to auto-update a DateTime field	--> Use for updatedAt columns

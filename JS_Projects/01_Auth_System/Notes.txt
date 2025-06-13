@@ -1,0 +1,27 @@
+Request and Response object : -
+
+🧾 req – Request Object
+This object contains everything that comes from the client, such as:
+
+req.body → the data sent in a POST request (e.g. name, email, password)
+
+req.params → dynamic URL parts (e.g. /user/:id)
+
+req.query → query string values (e.g. /search?q=pizza)
+
+req.headers → metadata like authorization tokens
+
+
+
+
+🍽️ res – Response Object
+This object is used to send things back to the client. You can:
+
+Send status codes: res.status(200)
+
+Send JSON data: res.json({ message: "Success" })
+
+Send errors: res.status(400).json({ error: "Bad Request" })
+
+End the response: res.end()
+

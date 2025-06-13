@@ -1,0 +1,114 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum OrderStatus {
+  PENDING
+  SHIPPED
+  DELIVERED
+  CANCELED
+}
+
+model User {
+  id                       String    @id @default(uuid())
+  name                     String?
+  email                    String    @unique
+  password                 String
+  verificationToken        String?
+  isVerified               Boolean?  @default(false)
+  passwordResetToken       String?
+  passwordResetTokenExpiry DateTime?
+  accessToken              String?
+  accessTokenExpiry        DateTime?
+  refreshToken             String?
+  refreshTokenExpiry       DateTime?
+  role                     Role      @default(USER)
+  createdAt                DateTime  @default(now())
+  updatedAt                DateTime  @updatedAt
+
+  myBooks Book[]
+  orders  Order[]
+  apiKeys ApiKey[]
+  reviews Review[]
+}
+
+model ApiKey {
+  id       String  @id @default(uuid())
+  key      String  @unique
+  isActive Boolean @default(false)
+  ownerId  String
+
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+
+  owner User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+}
+
+model Book {
+  id          String    @id @default(uuid())
+  title       String
+  description String?
+  page        Int?
+  publishedOn DateTime?
+  language    String
+  author      String?
+  price       Decimal
+  userId      String
+  genre       String?
+  isbn        String?
+  bookCover   String?
+  isBorrowed  Boolean   @default(false)
+  isPurchased Boolean   @default(false)
+
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+
+  owner User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  orders  Order[]
+  reviews Review[]
+}
+
+model Order {
+  id         String      @id @default(uuid())
+  userId     String
+  bookId     String
+  quantity   Int         @default(1)
+  status     OrderStatus @default(PENDING)
+  totalPrice Float?
+
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  book Book @relation(fields: [bookId], references: [id], onDelete: Cascade)
+}
+
+model Review {
+  id      String  @id @default(uuid())
+  title   String?
+  message String
+  userId  String
+  bookId  String
+  rating  Int     @default(0)
+
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+
+  user User? @relation(fields: [userId], references: [id], onDelete: Cascade)
+  book Book? @relation(fields: [bookId], references: [id], onDelete: Cascade)
+
+  @@index([bookId]) //query reviews by book or by user often
+  @@index([userId])
+}
