@@ -5,9 +5,10 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
+  "prisma:generate": "npx prisma generate",
   "prisma:migrate": "npx prisma migrate deploy",
-  "start": "node src/index.js",
-  "build": "npm run prisma:migrate"
+  "build": "npm run prisma:generate && npm run prisma:migrate",
+  "start": "node src/index.js"
   },
   "author": "",
   "license": "ISC",
