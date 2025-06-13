@@ -5,7 +5,9 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "nodemon src/index.js"
+  "prisma:migrate": "npx prisma migrate deploy",
+  "start": "node src/index.js",
+  "build": "npm run prisma:migrate"
   },
   "author": "",
   "license": "ISC",
